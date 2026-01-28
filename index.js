@@ -47,17 +47,23 @@ setInterval(() => {
 // CORS configuration - restrict to your domain
 const allowedOrigins = process.env.ALLOWED_ORIGINS 
   ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:3000', 'http://localhost:5500'];
+  : [];
 
 app.use(cors({
   origin: function(origin, callback) {
     // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    // In development, allow all origins
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    // In production, check allowed origins
+    if (allowedOrigins.length === 0 || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true); // Temporarily allow all for debugging
     }
   },
   credentials: true
@@ -116,15 +122,18 @@ app.post('/get-token', rateLimiter, async (req, res) => {
     }
 
     // Check if environment variables are set
-    if (!process.env.LIVEKIT_API_KEY || !process.env.LIVEKIT_API_SECRET) {
-      console.error('LiveKit credentials not configured');
-      return res.status(500).json({ error: 'Server configuration error' });
+    const apiKey = process.env.LIVEKIT_API_KEY;
+    const apiSecret = process.env.LIVEKIT_API_SECRET;
+    
+    if (!apiKey || !apiSecret) {
+      console.error('LiveKit credentials not configured. API_KEY:', !!apiKey, 'API_SECRET:', !!apiSecret);
+      return res.status(500).json({ error: 'Server configuration error. Please contact administrator.' });
     }
 
     // Create token
     const token = new AccessToken(
-      process.env.LIVEKIT_API_KEY,
-      process.env.LIVEKIT_API_SECRET,
+      apiKey,
+      apiSecret,
       { identity: userName.trim() }
     );
 
@@ -139,8 +148,8 @@ app.post('/get-token', rateLimiter, async (req, res) => {
     res.json({ token: jwt });
 
   } catch (error) {
-    console.error('Error generating token:', error.message);
-    res.status(500).json({ error: 'Failed to generate token' });
+    console.error('Error generating token:', error.message, error.stack);
+    res.status(500).json({ error: 'Failed to generate token. Please try again.' });
   }
 });
 

@@ -352,6 +352,11 @@
 
     const IS_PRODUCTION = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
     const LIVEKIT_URL = 'wss://practice-am64s12w.livekit.cloud';
+    
+    // API endpoint - use localhost:3000 for development
+    const API_BASE_URL = window.location.port === '5500' 
+      ? 'http://localhost:3000' 
+      : window.location.origin;
 
     let room = null;
     let isMicOn = true;
@@ -444,7 +449,7 @@
         joinBtn.disabled = true;
 
         // Get token from backend
-        const res = await fetch('/get-token', {
+        const res = await fetch(`${API_BASE_URL}/get-token`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ roomName, userName })

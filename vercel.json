@@ -9,11 +9,20 @@
   "routes": [
     {
       "src": "/get-token",
-      "dest": "index.js"
+      "dest": "index.js",
+      "methods": ["POST", "OPTIONS"]
+    },
+    {
+      "src": "/health",
+      "dest": "index.js",
+      "methods": ["GET"]
     },
     {
       "src": "/(.*)",
       "dest": "index.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
