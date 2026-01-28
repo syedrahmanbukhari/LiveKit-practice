@@ -439,23 +439,56 @@
         updateParticipantCount();
       });
 
-      // Track subscribed
+      // Track subscribed (remote participant ka video/audio)
       room.on('trackSubscribed', (track, publication, participant) => {
+        console.log('Track subscribed:', track.kind, 'from', participant.identity);
+        
+        const tile = document.getElementById(`tile-${participant.identity}`);
+        if (!tile) {
+          console.log('Tile not found, creating new one');
+          addVideoTile(participant);
+          return;
+        }
+
         if (track.kind === 'video') {
-          const tile = document.getElementById(`tile-${participant.identity}`);
-          if (tile) {
-            const videoEl = track.attach();
-            const name = tile.querySelector('.participant-name');
-            tile.insertBefore(videoEl, name);
-          }
+          // Remove existing video if any
+          const existingVideo = tile.querySelector('video');
+          if (existingVideo) existingVideo.remove();
+
+          const videoEl = track.attach();
+          videoEl.style.width = '100%';
+          videoEl.style.height = '100%';
+          videoEl.style.objectFit = 'cover';
+          const name = tile.querySelector('.participant-name');
+          tile.insertBefore(videoEl, name);
+          console.log('Video attached for', participant.identity);
         } else if (track.kind === 'audio') {
-          track.attach();
+          track.attach(); // Audio automatically plays
+          console.log('Audio attached for', participant.identity);
         }
       });
 
       // Track unsubscribed
       room.on('trackUnsubscribed', (track, publication, participant) => {
+        console.log('Track unsubscribed:', track.kind, 'from', participant.identity);
         track.detach();
+      });
+
+      // Track muted/unmuted
+      room.on('trackMuted', (publication, participant) => {
+        console.log('Track muted:', publication.kind, 'from', participant.identity);
+        if (publication.kind === 'audio') {
+          const micStatus = document.getElementById(`mic-${participant.identity}`);
+          if (micStatus) micStatus.textContent = '🔇';
+        }
+      });
+
+      room.on('trackUnmuted', (publication, participant) => {
+        console.log('Track unmuted:', publication.kind, 'from', participant.identity);
+        if (publication.kind === 'audio') {
+          const micStatus = document.getElementById(`mic-${participant.identity}`);
+          if (micStatus) micStatus.textContent = '🎤';
+        }
       });
     }
 
