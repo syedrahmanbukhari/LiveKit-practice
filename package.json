@@ -1,15 +1,20 @@
 {
   "name": "livekit-prac",
   "version": "1.0.0",
-  "description": "",
+  "description": "LiveKit Video Conferencing App",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["livekit", "video", "conference", "webrtc"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
