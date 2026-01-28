@@ -288,7 +288,7 @@
         joinBtn.disabled = true;
 
         // Get token from backend
-        const res = await fetch('http://localhost:3000/get-token', {
+        const res = await fetch('/get-token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ roomName, userName })
