@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Meeting - LiveKit</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="notification" id="notification"></div>
+
+  <div class="home-container">
+    <div class="hero-section">
+      <h1>🎥 Video Conferencing</h1>
+      <p>Create instant meetings and share with anyone</p>
+    </div>
+
+    <div class="card">
+      <h2>Create New Meeting</h2>
+      <form id="createRoomForm">
+        <div class="input-group">
+          <label>Meeting Name</label>
+          <input type="text" id="roomName" placeholder="e.g., Team Standup" maxlength="50" required>
+          <div class="error-message" id="roomNameError"></div>
+        </div>
+
+        <div class="input-group">
+          <label>Your Name</label>
+          <input type="text" id="hostName" placeholder="Enter your name" maxlength="50" required>
+          <div class="error-message" id="hostNameError"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="createBtn">
+          Create Meeting
+        </button>
+      </form>
+    </div>
+
+    <!-- Room Created Modal -->
+    <div class="modal" id="roomModal">
+      <div class="modal-content">
+        <h2>✅ Meeting Created!</h2>
+        <div class="room-info">
+          <p><strong>Meeting Name:</strong> <span id="modalRoomName"></span></p>
+          <p><strong>Room ID:</strong> <span id="modalRoomId"></span></p>
+        </div>
+
+        <div class="link-section">
+          <label>Share this link with participants:</label>
+          <div class="link-container">
+            <input type="text" id="joinLink" readonly>
+            <button class="btn btn-secondary" id="copyBtn">Copy</button>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="startMeetingBtn">Start Meeting</button>
+          <button class="btn btn-secondary" id="closeModalBtn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/home.js"></script>
+</body>
+</html>

@@ -1,14 +1,14 @@
 {
-  "name": "livekit-prac",
-  "version": "1.0.0",
-  "description": "LiveKit Video Conferencing App",
-  "main": "index.js",
+  "name": "livekit-video-conference",
+  "version": "2.0.0",
+  "description": "LiveKit Video Conferencing App with Room Creation",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node index.js",
+    "start": "node server.js",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["livekit", "video", "conference", "webrtc"],
+  "keywords": ["livekit", "video", "conference", "webrtc", "zoom"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",

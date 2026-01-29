@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting - LiveKit</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="notification" id="notification"></div>
+
+  <div id="meetingScreen">
+    <div class="meeting-header">
+      <div class="room-info">
+        <h2 id="roomTitle">Meeting Room</h2>
+        <div class="participant-count" id="participantCount">0 participants</div>
+      </div>
+      <div class="connection-status">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Connected</span>
+      </div>
+    </div>
+
+    <div class="video-container" id="videoContainer">
+      <!-- Video tiles will be added here -->
+    </div>
+
+    <div class="controls">
+      <button class="control-btn mic" id="micBtn" title="Toggle Microphone">🎤</button>
+      <button class="control-btn video" id="videoBtn" title="Toggle Camera">📹</button>
+      <button class="control-btn leave" id="leaveBtn" title="Leave Meeting">📞</button>
+    </div>
+  </div>
+
+  <script type="module" src="/js/meeting.js"></script>
+</body>
+</html>

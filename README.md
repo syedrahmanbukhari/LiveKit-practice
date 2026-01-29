@@ -1,19 +1,51 @@
 # LiveKit Video Conferencing App
 
-Production-ready video conferencing application built with LiveKit.
+Production-ready video conferencing application with room creation and link sharing (Zoom-style).
 
 ## Features
 
+- ✅ Create meeting rooms with unique links
+- ✅ Share meeting links with participants
 - ✅ Real-time video and audio
 - ✅ Multiple participants support
 - ✅ Mute/unmute controls
 - ✅ Camera on/off toggle
 - ✅ Automatic reconnection
 - ✅ Mobile responsive
-- ✅ Rate limiting
-- ✅ Input validation
-- ✅ CORS protection
+- ✅ MVC architecture
 - ✅ Production-ready security
+
+## Project Structure
+
+```
+├── server.js                 # Main server file
+├── src/
+│   ├── controllers/          # Business logic
+│   │   └── roomController.js
+│   ├── models/              # Data models
+│   │   └── Room.js
+│   ├── routes/              # API routes
+│   │   └── roomRoutes.js
+│   ├── middleware/          # Express middleware
+│   │   ├── rateLimiter.js
+│   │   └── errorHandler.js
+│   └── utils/               # Utility functions
+│       ├── tokenGenerator.js
+│       ├── validator.js
+│       └── roomIdGenerator.js
+├── views/                   # HTML pages
+│   ├── home.html           # Create room page
+│   ├── join.html           # Join room page
+│   └── meeting.html        # Meeting room page
+├── public/                  # Static assets
+│   ├── css/
+│   │   └── styles.css
+│   └── js/
+│       ├── home.js
+│       ├── join.js
+│       └── meeting.js
+└── .env                     # Environment variables
+```
 
 ## Setup
 
@@ -25,7 +57,7 @@ npm install
 
 ### 2. Configure Environment Variables
 
-Copy `.env.example` to `.env` and fill in your LiveKit credentials:
+Copy `.env.example` to `.env`:
 
 ```bash
 cp .env.example .env
@@ -36,8 +68,8 @@ Edit `.env`:
 LIVEKIT_API_KEY=your_api_key_here
 LIVEKIT_API_SECRET=your_api_secret_here
 LIVEKIT_URL=wss://your-livekit-server.livekit.cloud
-ALLOWED_ORIGINS=https://your-domain.vercel.app
-NODE_ENV=production
+BASE_URL=http://localhost:3000
+NODE_ENV=development
 ```
 
 ### 3. Run Locally
@@ -48,24 +80,65 @@ npm start
 
 Visit `http://localhost:3000`
 
+## How It Works
+
+### 1. Create Meeting
+- Go to home page
+- Enter meeting name and your name
+- Click "Create Meeting"
+- Get shareable link
+
+### 2. Share Link
+- Copy the generated link
+- Share with participants via email, chat, etc.
+
+### 3. Join Meeting
+- Participants click the link
+- Enter their name
+- Join the meeting
+
+## API Endpoints
+
+### POST /api/create-room
+Create a new meeting room
+```json
+{
+  "roomName": "Team Meeting",
+  "hostName": "John Doe"
+}
+```
+
+### POST /api/join-room
+Join an existing room
+```json
+{
+  "roomId": "abc123",
+  "userName": "Jane Smith"
+}
+```
+
+### GET /api/room/:roomId
+Get room details
+
+### GET /api/health
+Health check endpoint
+
 ## Deployment to Vercel
 
 ### 1. Push to GitHub
 
 ```bash
 git add .
-git commit -m "Production ready"
+git commit -m "MVC structure with room creation"
 git push
 ```
 
 ### 2. Configure Vercel Environment Variables
 
-In Vercel Dashboard → Settings → Environment Variables, add:
-
 - `LIVEKIT_API_KEY`
 - `LIVEKIT_API_SECRET`
 - `LIVEKIT_URL`
-- `ALLOWED_ORIGINS` (your Vercel domain)
+- `BASE_URL` (your Vercel domain)
 - `NODE_ENV=production`
 
 ### 3. Deploy
@@ -74,26 +147,14 @@ Vercel will automatically deploy on push.
 
 ## Security Features
 
-- ✅ No hardcoded credentials
-- ✅ Rate limiting (10 requests/minute per IP)
+- ✅ Rate limiting (20 requests/minute per IP)
 - ✅ Input validation and sanitization
-- ✅ CORS restricted to allowed origins
+- ✅ CORS protection
+- ✅ No hardcoded credentials
 - ✅ Request payload size limits
 - ✅ Error handling without exposing internals
-- ✅ Production logs disabled
-
-## Rate Limits
-
-- Token generation: 10 requests per minute per IP
-- Automatic cleanup of rate limit data
-
-## Browser Support
-
-- Chrome/Edge (recommended)
-- Firefox
-- Safari
-- Mobile browsers
 
 ## License
 
 ISC
+
