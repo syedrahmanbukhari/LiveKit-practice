@@ -6,6 +6,7 @@ const LIVEKIT_URL = 'wss://practice-am64s12w.livekit.cloud';
 let room = null;
 let isMicOn = true;
 let isVideoOn = true;
+let isSpeakerOn = true;
 let reconnectAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
 
@@ -15,6 +16,7 @@ const roomTitle = document.getElementById('roomTitle');
 const participantCount = document.getElementById('participantCount');
 const micBtn = document.getElementById('micBtn');
 const videoBtn = document.getElementById('videoBtn');
+const speakerBtn = document.getElementById('speakerBtn');
 const leaveBtn = document.getElementById('leaveBtn');
 const statusDot = document.getElementById('statusDot');
 const statusText = document.getElementById('statusText');
@@ -245,7 +247,9 @@ function setupRoomEvents() {
       if (existingVideo) existingVideo.remove();
       attachVideoTrack(tile, track, false);
     } else if (track.kind === 'audio') {
-      track.attach();
+      const audioEl = track.attach();
+      audioEl.volume = isSpeakerOn ? 1 : 0;
+      audioEl.setAttribute('data-participant', participant.identity);
     }
   });
 
@@ -309,6 +313,27 @@ videoBtn.onclick = async () => {
   }
 };
 
+// Toggle Speaker
+speakerBtn.onclick = () => {
+  try {
+    isSpeakerOn = !isSpeakerOn;
+    
+    // Mute/unmute all remote audio tracks
+    const audioElements = document.querySelectorAll('audio');
+    audioElements.forEach(audioEl => {
+      audioEl.volume = isSpeakerOn ? 1 : 0;
+    });
+    
+    speakerBtn.classList.toggle('muted', !isSpeakerOn);
+    speakerBtn.textContent = isSpeakerOn ? '🔊' : '🔇';
+    
+    showNotification(isSpeakerOn ? 'Speaker on' : 'Speaker muted');
+  } catch (error) {
+    console.error('Speaker toggle error:', error);
+    showNotification('Failed to toggle speaker');
+  }
+};
+
 // Leave Meeting
 leaveBtn.onclick = handleLeave;
 
@@ -323,6 +348,11 @@ async function handleLeave() {
   sessionStorage.removeItem('roomId');
   sessionStorage.removeItem('roomName');
   sessionStorage.removeItem('userName');
+  
+  // Reset states
+  isMicOn = true;
+  isVideoOn = true;
+  isSpeakerOn = true;
   
   // Redirect to home
   window.location.href = '/';

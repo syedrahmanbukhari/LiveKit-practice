@@ -420,6 +420,15 @@ body {
   background: #ea4335;
 }
 
+.control-btn.speaker {
+  background: #3c4043;
+  color: white;
+}
+
+.control-btn.speaker.muted {
+  background: #ea4335;
+}
+
 .control-btn.leave {
   background: #ea4335;
   color: white;
