@@ -9,14 +9,18 @@ class RoomController {
     try {
       const { roomName, hostName } = req.body;
 
+      console.log('Create room request:', { roomName, hostName });
+
       // Validate input
       const errors = validator.validateInput(roomName, hostName);
       if (errors.length > 0) {
+        console.log('Validation errors:', errors);
         return res.status(400).json({ error: errors.join(', ') });
       }
 
       // Generate unique room ID
       const roomId = roomIdGenerator.generateShortId();
+      console.log('Generated room ID:', roomId);
 
       // Create room in database
       const room = RoomModel.createRoom({
@@ -25,12 +29,19 @@ class RoomController {
         hostName: hostName.trim()
       });
 
+      console.log('Room created:', room);
+
       // Generate token for host
       const token = await tokenGenerator.generateToken(roomId, hostName.trim());
+      console.log('Token generated successfully');
 
       // Generate shareable link
-      const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+      const host = req.headers['x-forwarded-host'] || req.get('host');
+      const baseUrl = process.env.BASE_URL || `${protocol}://${host}`;
       const joinLink = `${baseUrl}/join/${roomId}`;
+
+      console.log('Join link:', joinLink);
 
       res.json({
         success: true,
@@ -46,7 +57,10 @@ class RoomController {
 
     } catch (error) {
       console.error('Error creating room:', error.message, error.stack);
-      res.status(500).json({ error: 'Failed to create room. Please try again.' });
+      res.status(500).json({ 
+        error: 'Failed to create room. Please try again.',
+        details: process.env.NODE_ENV !== 'production' ? error.message : undefined
+      });
     }
   }
 

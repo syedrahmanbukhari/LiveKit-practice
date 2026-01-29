@@ -7,24 +7,33 @@ class TokenGenerator {
   }
 
   generateToken(roomName, userName, options = {}) {
+    console.log('Generating token for:', { roomName, userName });
+    console.log('API Key exists:', !!this.apiKey);
+    console.log('API Secret exists:', !!this.apiSecret);
+
     if (!this.apiKey || !this.apiSecret) {
-      throw new Error('LiveKit credentials not configured');
+      throw new Error('LiveKit credentials not configured. Please set LIVEKIT_API_KEY and LIVEKIT_API_SECRET environment variables.');
     }
 
-    const token = new AccessToken(
-      this.apiKey,
-      this.apiSecret,
-      { identity: userName }
-    );
+    try {
+      const token = new AccessToken(
+        this.apiKey,
+        this.apiSecret,
+        { identity: userName }
+      );
 
-    token.addGrant({
-      roomJoin: true,
-      room: roomName,
-      canPublish: options.canPublish !== false,
-      canSubscribe: options.canSubscribe !== false
-    });
+      token.addGrant({
+        roomJoin: true,
+        room: roomName,
+        canPublish: options.canPublish !== false,
+        canSubscribe: options.canSubscribe !== false
+      });
 
-    return token.toJwt();
+      return token.toJwt();
+    } catch (error) {
+      console.error('Token generation error:', error);
+      throw new Error('Failed to generate access token: ' + error.message);
+    }
   }
 }
 
