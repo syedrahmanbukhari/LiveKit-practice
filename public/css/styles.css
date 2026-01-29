@@ -70,7 +70,7 @@ body {
 
 /* Card */
 .card {
-  background: gray;
+  background: white;
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.3);
@@ -281,7 +281,7 @@ body {
 
 .room-info h2 {
   font-size: 18px;
-  color: #fff;
+  color: black;
 }
 
 .participant-count {
