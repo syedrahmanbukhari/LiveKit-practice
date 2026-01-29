@@ -8,23 +8,28 @@
   ],
   "routes": [
     {
+      "src": "/css/styles.css",
+      "dest": "/public/css/styles.css"
+    },
+    {
+      "src": "/js/home.js",
+      "dest": "/public/js/home.js"
+    },
+    {
+      "src": "/js/join.js",
+      "dest": "/public/js/join.js"
+    },
+    {
+      "src": "/js/meeting.js",
+      "dest": "/public/js/meeting.js"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "server.js"
-    },
-    {
-      "src": "/css/(.*)",
-      "dest": "/public/css/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/public/js/$1"
+      "dest": "/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "server.js"
+      "dest": "/server.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
